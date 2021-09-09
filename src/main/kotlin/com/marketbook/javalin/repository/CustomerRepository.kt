@@ -1,5 +1,7 @@
 package com.marketbook.javalin.repository
 
-import io.javalin.apibuilder.CrudHandler
+import com.marketbook.javalin.model.CustomerModel
 
-interface CustomerRepository: CrudHandler
+interface CustomerRepository {
+    fun getAll(): List<CustomerModel>
+}
