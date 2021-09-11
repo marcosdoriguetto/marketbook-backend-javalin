@@ -1,6 +1,6 @@
 package com.marketbook.javalin.controller.request
 
 data class PostCustomerRequest(
-    val name: String,
-    val email: String
+    var name: String,
+    var email: String
 )
