@@ -19,10 +19,16 @@ class CustomerService(
     }
 
     fun updateCustomer(customer: CustomerModel) {
+        if(!customerRepository.fetchCustomer(customer.id!!)) {
+            throw Exception()
+        }
         customerRepository.putCustomer(customer)
     }
 
     fun removeCustomer(id: Int) {
+        if(!customerRepository.fetchCustomer(id)) {
+            throw Exception()
+        }
         customerRepository.deleteCustomer(id)
     }
 }

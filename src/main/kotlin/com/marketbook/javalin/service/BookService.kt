@@ -24,10 +24,16 @@ class BookService(
     }
 
     fun updateBook(book: BookModel) {
+        if(!bookRepository.fetchCustomer(book.id!!)) {
+            throw Exception()
+        }
         bookRepository.putBook(book)
     }
 
     fun deleteBook(id: Int) {
+        if(!bookRepository.fetchCustomer(id)) {
+            throw Exception()
+        }
         bookRepository.deleteBook(id)
     }
 }
