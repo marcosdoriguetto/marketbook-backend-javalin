@@ -46,7 +46,7 @@ class ActivitiesRepositoryImpl: ActivitiesRepositoryModel {
 
     override fun deleteCustomer(id: Int) {
         runCommand {
-            it.createUpdate("DELETE FROM customer WHERE id = $id").execute()
+            it.createUpdate("UPDATE FROM customer WHERE id = $id").execute()
         }
     }
 
@@ -59,13 +59,19 @@ class ActivitiesRepositoryImpl: ActivitiesRepositoryModel {
 
     override fun fetchBook(id: Int): BookModel {
         return runCommand {
-            it.select("select b.id, b.name, b.price,b.status, c.id idCustomer, c.name nameCustomer, c.email emailCustomer from book b INNER JOIN customer c on b.customer_id = c.id where b.id = $id").map(BookMapper()).findOnly()
+            it.select("select b.id, b.name, b.price, b.status, c.id idCustomer, c.name nameCustomer, c.email emailCustomer from book b INNER JOIN customer c on b.customer_id = c.id where b.id = $id").map(BookMapper()).findOnly()
+        }
+    }
+
+    override fun fetchBooksCustomer(id: Int): List<BookModel> {
+        return runCommand {
+            it.select("select b.id, b.name, b.price, b.status, c.id idCustomer, c.name nameCustomer, c.email emailCustomer from book b INNER JOIN customer c on b.customer_id = c.id where c.id = $id").map(BookMapper()).list()
         }
     }
 
     override fun fetchBooksStatus(status: String): List<BookModel> {
         return runCommand {
-            it.select("select b.id, b.name, b.price,b.status, c.id idCustomer, c.name nameCustomer, c.email emailCustomer from book b INNER JOIN customer c on b.customer_id = c.id where b.status = '$status'").map(BookMapper()).list()
+            it.select("select b.id, b.name, b.price, b.status, c.id idCustomer, c.name nameCustomer, c.email emailCustomer from book b INNER JOIN customer c on b.customer_id = c.id where b.status = '$status'").map(BookMapper()).list()
         }
     }
 
@@ -83,6 +89,18 @@ class ActivitiesRepositoryImpl: ActivitiesRepositoryModel {
     override fun putBook(book: BookModel) {
         runCommand {
             it.createUpdate("UPDATE book SET name = '${book.name}', price = ${book.price}, status = '${book.status}' WHERE id = ${book.id}").execute()
+        }
+    }
+
+    override fun deleteBooksByCustomer(id: Int) {
+        val books = fetchBooksCustomer(id)
+
+        for(book in books) {
+            book.status = BookStatus.DELETED
+
+            runCommand {
+                it.createUpdate("UPDATE book SET status = 'DELETED' WHERE id = ${book.id}").execute()
+            }
         }
     }
 

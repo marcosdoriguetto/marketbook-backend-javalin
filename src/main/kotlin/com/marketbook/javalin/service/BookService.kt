@@ -19,6 +19,10 @@ class BookService(
         return bookRepository.fetchBooksStatus(status)
     }
 
+    fun getBooksByCustomer(id: Int): List<BookModel> {
+        return bookRepository.fetchBooksCustomer(id)
+    }
+
     fun createBook(book: BookModel) {
         bookRepository.postBook(book)
     }

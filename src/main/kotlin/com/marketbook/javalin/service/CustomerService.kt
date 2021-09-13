@@ -29,6 +29,6 @@ class CustomerService(
         if(!customerRepository.fetchCustomer(id)) {
             throw Exception()
         }
-        customerRepository.deleteCustomer(id)
+        customerRepository.deleteBooksByCustomer(id)
     }
 }

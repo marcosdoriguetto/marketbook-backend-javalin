@@ -13,9 +13,11 @@ interface ActivitiesRepositoryModel {
     //Books
     fun fetchBooks(status: String?): List<BookModel>
     fun fetchBook(id: Int): BookModel
+    fun fetchBooksCustomer(id: Int): List<BookModel>
     fun fetchBooksStatus(status: String): List<BookModel>
     fun getLastBookId(): BookModel
     fun postBook(book: BookModel)
     fun putBook(book: BookModel)
+    fun deleteBooksByCustomer(id: Int)
     fun deleteBook(id: Int)
 }

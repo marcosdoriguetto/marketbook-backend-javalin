@@ -43,11 +43,13 @@ fun start() {
                 val status = it.queryParam("status")?.uppercase()
                 it.json(ApplicationFactory.bookController.getBooks(status))
             }
+            get("/customer/:id") {
+                it.json(ApplicationFactory.bookController.getBooksByCustomer(it.pathParam("id").toInt()))
+            }
             post {
                 val book = it.body<PostBookRequest>()
                 it.json(ApplicationFactory.bookController.createBook(book))
             }
-
             path(":id") {
                 get {
                     it.json(ApplicationFactory.bookController.getBook(it.pathParam("id").toInt()))

@@ -24,6 +24,10 @@ class BookController(
         return bookService.getBooksStatus(status)
     }
 
+    fun getBooksByCustomer(id: Int): List<BookModel> {
+        return bookService.getBooksByCustomer(id)
+    }
+
     fun createBook(book: PostBookRequest) {
         val customer = customerService.getCustomer(book.customerId)
         bookService.createBook(book.toBookModel(customer))
