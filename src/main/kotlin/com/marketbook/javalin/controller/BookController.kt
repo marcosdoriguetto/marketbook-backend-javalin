@@ -12,8 +12,8 @@ class BookController(
     val bookService: BookService,
     val customerService: CustomerService
 ) {
-    fun getBooks(status: String?): List<BookModel> {
-        return bookService.getBooks(status)
+    fun getBooks(name: String?): List<BookModel> {
+        return bookService.getBooks(name)
     }
 
     fun getBook(id: Int): BookModel {

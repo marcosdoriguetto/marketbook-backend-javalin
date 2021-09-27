@@ -51,9 +51,9 @@ class ActivitiesRepositoryImpl: ActivitiesRepositoryModel {
     }
 
     //Books
-    override fun fetchBooks(status: String?): List<BookModel> {
+    override fun fetchBooks(name: String?): List<BookModel> {
         return runCommand {
-            it.select("""select b.id, b.name, b.price, b.status, c.id idCustomer, c.name nameCustomer, c.email emailCustomer from book b INNER JOIN customer c on b.customer_id = c.id where (:status is null or b.status = :status)""").bind("status", status).map(BookMapper()).list()
+            it.select("""select b.id, b.name, b.price, b.status, c.id idCustomer, c.name nameCustomer, c.email emailCustomer from book b INNER JOIN customer c on b.customer_id = c.id where (:name is null or b.name LIKE '%$name%')""").bind("name", name).map(BookMapper()).list()
         }
     }
 

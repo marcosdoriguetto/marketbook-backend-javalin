@@ -7,8 +7,8 @@ import com.marketbook.javalin.model.BookModel
 class BookService(
     val bookRepository: ActivitiesRepositoryImpl
 ) {
-    fun getBooks(status: String?): List<BookModel> {
-        return bookRepository.fetchBooks(status)
+    fun getBooks(name: String?): List<BookModel> {
+        return bookRepository.fetchBooks(name)
     }
 
     fun getBook(id: Int): BookModel {

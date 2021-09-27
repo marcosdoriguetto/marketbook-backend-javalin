@@ -40,7 +40,7 @@ fun start() {
         }
         path("books") {
             get {
-                val status = it.queryParam("status")?.uppercase()
+                val status = it.queryParam("name")
                 it.json(ApplicationFactory.bookController.getBooks(status))
             }
             get("/customer/:id") {
