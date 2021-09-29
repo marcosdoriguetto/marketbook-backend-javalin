@@ -2,12 +2,13 @@ package com.marketbook.javalin.service
 
 import com.marketbook.javalin.infra.ActivitiesRepositoryImpl
 import com.marketbook.javalin.model.CustomerModel
+import com.marketbook.javalin.model.PaginationModel
 
 class CustomerService(
     val customerRepository: ActivitiesRepositoryImpl
 ) {
-    fun getAllCustomers(name: String?): List<CustomerModel> {
-        return customerRepository.fetchCustomers(name)
+    fun getAllCustomers(name: String?, page: PaginationModel?): List<CustomerModel> {
+        return customerRepository.fetchCustomers(name, page)
     }
 
     fun getCustomer(id: Int): CustomerModel {

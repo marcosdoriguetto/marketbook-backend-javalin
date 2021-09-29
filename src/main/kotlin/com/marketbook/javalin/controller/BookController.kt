@@ -5,6 +5,7 @@ import com.marketbook.javalin.controller.request.PutBookRequest
 import com.marketbook.javalin.enums.BookStatus
 import com.marketbook.javalin.extension.toBookModel
 import com.marketbook.javalin.model.BookModel
+import com.marketbook.javalin.model.PaginationModel
 import com.marketbook.javalin.service.BookService
 import com.marketbook.javalin.service.CustomerService
 
@@ -12,8 +13,8 @@ class BookController(
     val bookService: BookService,
     val customerService: CustomerService
 ) {
-    fun getBooks(name: String?): List<BookModel> {
-        return bookService.getBooks(name)
+    fun getBooks(name: String?, page: PaginationModel?): List<BookModel> {
+        return bookService.getBooks(name, page)
     }
 
     fun getBook(id: Int): BookModel {

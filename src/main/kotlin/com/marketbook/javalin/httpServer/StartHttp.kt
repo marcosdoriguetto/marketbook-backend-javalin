@@ -7,6 +7,7 @@ import com.marketbook.javalin.controller.request.PutBookRequest
 import com.marketbook.javalin.controller.request.PutCustomerRequest
 import com.marketbook.javalin.factory.ApplicationFactory
 import com.marketbook.javalin.model.CustomerModel
+import com.marketbook.javalin.model.PaginationModel
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.*
 
@@ -19,7 +20,9 @@ fun start() {
         path("customers") {
             get {
                 val name = it.queryParam("name")
-                it.json(ApplicationFactory.customerController.getCustomers(name))
+                val page = it.queryParam("limit")?.toInt()
+                val offset = it.queryParam("offset")?.toInt()
+                it.json(ApplicationFactory.customerController.getCustomers(name, PaginationModel(page, offset)))
             }
             post {
                 val customer = it.body<PostCustomerRequest>()
@@ -41,7 +44,9 @@ fun start() {
         path("books") {
             get {
                 val status = it.queryParam("name")
-                it.json(ApplicationFactory.bookController.getBooks(status))
+                val page = it.queryParam("limit")?.toInt()
+                val offset = it.queryParam("offset")?.toInt()
+                it.json(ApplicationFactory.bookController.getBooks(status, PaginationModel(page, offset)))
             }
             get("/customer/:id") {
                 it.json(ApplicationFactory.bookController.getBooksByCustomer(it.pathParam("id").toInt()))

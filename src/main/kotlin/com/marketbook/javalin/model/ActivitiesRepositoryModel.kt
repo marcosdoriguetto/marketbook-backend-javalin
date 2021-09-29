@@ -4,14 +4,14 @@ import com.marketbook.javalin.enums.BookStatus
 
 interface ActivitiesRepositoryModel {
     //Customers
-    fun fetchCustomers(name: String?): List<CustomerModel>
+    fun fetchCustomers(name: String?, page: PaginationModel?): List<CustomerModel>
     fun fetchCustomer(id: Int): CustomerModel
     fun getLastCustomerId(): CustomerModel
     fun postCustomer(customer: CustomerModel)
     fun putCustomer(customer: CustomerModel)
     fun deleteCustomer(id: Int)
     //Books
-    fun fetchBooks(status: String?): List<BookModel>
+    fun fetchBooks(status: String?, page: PaginationModel?): List<BookModel>
     fun fetchBook(id: Int): BookModel
     fun fetchBooksCustomer(id: Int): List<BookModel>
     fun fetchBooksStatus(status: String): List<BookModel>

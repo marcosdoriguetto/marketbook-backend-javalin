@@ -3,12 +3,13 @@ package com.marketbook.javalin.service
 import com.marketbook.javalin.enums.BookStatus
 import com.marketbook.javalin.infra.ActivitiesRepositoryImpl
 import com.marketbook.javalin.model.BookModel
+import com.marketbook.javalin.model.PaginationModel
 
 class BookService(
     val bookRepository: ActivitiesRepositoryImpl
 ) {
-    fun getBooks(name: String?): List<BookModel> {
-        return bookRepository.fetchBooks(name)
+    fun getBooks(name: String?, page: PaginationModel?): List<BookModel> {
+        return bookRepository.fetchBooks(name, page)
     }
 
     fun getBook(id: Int): BookModel {

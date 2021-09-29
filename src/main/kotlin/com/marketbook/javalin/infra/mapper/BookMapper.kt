@@ -10,7 +10,7 @@ import java.sql.ResultSet
 class BookMapper : ColumnMapper<BookModel> {
     override fun map(rs: ResultSet, columnNumber: Int, ctx: StatementContext?): BookModel {
         return BookModel(
-                id = rs.getInt("id"),
+            id = rs.getInt("id"),
             name = rs.getString("name"),
             price = rs.getBigDecimal("price"),
             status = BookStatus.valueOf(rs.getString("status")),

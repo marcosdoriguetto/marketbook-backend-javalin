@@ -1,23 +1,27 @@
 package com.marketbook.javalin.infra
 
-import com.marketbook.javalin.controller.request.PostBookRequest
-import com.marketbook.javalin.controller.request.PostCustomerRequest
-import com.marketbook.javalin.controller.request.PutCustomerRequest
 import com.marketbook.javalin.enums.BookStatus
-import com.marketbook.javalin.infra.connection.DatabaseHelper
 import com.marketbook.javalin.infra.connection.DatabaseHelper.runCommand
 import com.marketbook.javalin.infra.mapper.BookMapper
 import com.marketbook.javalin.infra.mapper.CustomerMapper
 import com.marketbook.javalin.model.ActivitiesRepositoryModel
 import com.marketbook.javalin.model.BookModel
 import com.marketbook.javalin.model.CustomerModel
-import java.awt.print.Book
+import com.marketbook.javalin.model.PaginationModel
 
 class ActivitiesRepositoryImpl: ActivitiesRepositoryModel {
     //Customers
-    override fun fetchCustomers(name: String?): List<CustomerModel> {
+    override fun fetchCustomers(name: String?, page: PaginationModel?): List<CustomerModel> {
+        if(page?.limit == null || page?.offset == null) {
+            val limit= 10
+            val offset = 0
+            return runCommand {
+                it.select("SELECT * FROM customer where (:name is null or name LIKE '%$name%') limit $limit offset $offset").bind("name", name).map(CustomerMapper()).list()
+            }
+        }
+
         return runCommand {
-            it.select("SELECT * FROM customer where (:name is null or name LIKE '%$name%')").bind("name", name).map(CustomerMapper()).list()
+            it.select("SELECT * FROM customer where (:name is null or name LIKE '%$name%') limit ${page.limit} offset ${page.offset}").bind("name", name).map(CustomerMapper()).list()
         }
     }
 
@@ -28,7 +32,9 @@ class ActivitiesRepositoryImpl: ActivitiesRepositoryModel {
     }
 
     override fun getLastCustomerId(): CustomerModel {
-        return fetchCustomers(null).last()
+        return runCommand {
+            it.select("SELECT * FROM customer ORDER BY ID DESC LIMIT 1").map(CustomerMapper()).findOnly()
+        }
     }
 
     override fun postCustomer(customer: CustomerModel) {
@@ -51,9 +57,17 @@ class ActivitiesRepositoryImpl: ActivitiesRepositoryModel {
     }
 
     //Books
-    override fun fetchBooks(name: String?): List<BookModel> {
+    override fun fetchBooks(name: String?, page: PaginationModel?): List<BookModel> {
+        if(page?.limit == null || page?.offset == null) {
+            val limit= 10
+            val offset = 0
+            return runCommand {
+                it.select("select b.id, b.name, b.price, b.status, c.id idCustomer, c.name nameCustomer, c.email emailCustomer from book b INNER JOIN customer c on b.customer_id = c.id limit $limit offset $offset").map(BookMapper()).list()
+            }
+        }
+
         return runCommand {
-            it.select("""select b.id, b.name, b.price, b.status, c.id idCustomer, c.name nameCustomer, c.email emailCustomer from book b INNER JOIN customer c on b.customer_id = c.id where (:name is null or b.name LIKE '%$name%')""").bind("name", name).map(BookMapper()).list()
+            it.select("select b.id, b.name, b.price, b.status, c.id idCustomer, c.name nameCustomer, c.email emailCustomer from book b INNER JOIN customer c on b.customer_id = c.id limit ${page.limit} offset ${page.offset}").map(BookMapper()).list()
         }
     }
 
@@ -76,7 +90,9 @@ class ActivitiesRepositoryImpl: ActivitiesRepositoryModel {
     }
 
     override fun getLastBookId(): BookModel {
-        return fetchBooks(null).last()
+        return runCommand {
+            it.select("SELECT * FROM book ORDER BY ID DESC LIMIT 1").map(BookMapper()).findOnly()
+        }
     }
 
     override fun postBook(book: BookModel) {
